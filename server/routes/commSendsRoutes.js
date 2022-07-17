@@ -1,12 +1,13 @@
-const express = require("express");
-const router = express.Router();
-const {
+import express from "express";
+import {
   getCommSends,
   getCommSend,
   createCommSend,
   updateCommSend,
   deleteCommSend,
-} = require("../controllers/commSendsController");
+} from "../controllers/commSendsController.js";
+
+const router = express.Router();
 
 //get all
 router.get("/", getCommSends);
@@ -24,4 +25,4 @@ router.put("/update/:id", updateCommSend);
 
 router.delete("/delete/:id", deleteCommSend);
 
-module.exports = router;
+export default router;
