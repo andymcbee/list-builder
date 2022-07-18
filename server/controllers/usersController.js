@@ -75,15 +75,48 @@ export const createAccountOwnerUser = async (req, res) => {
   res.status(200).json({ result: newUser, token });
 };
 
-//create user logic
-//account owner
-//pass email, pw, confirm pw into backend
-//check and see if user exists w/ email
-//if so, return error. (Message + Error: true)
-//check and see if passwords match
-//If not, return error: (Message + error: true)
-//encrypt the PW
-//generate and random team ID + check to ensure it doesn't match one in MongoDB
-//create a new user in MongoDB w/ email + encrypted password + team ID
-//create JWT
-//respond w/ user + token
+export const signin = async (req, res) => {
+  const { email, password } = req.body;
+  console.log(email);
+  console.log(password);
+
+  console.log("WORKED");
+
+  try {
+    //attempt to find a user in the DB that matches the req.body.email
+    const existingUser = await User.findOne({ email });
+    console.log(existingUser);
+
+    //If user not found, return an error message
+    if (!existingUser)
+      return res
+        .status(404)
+        .json({ message: "User does not exist", error: true });
+
+    //check to see if password provided matches hashed password in DB
+
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
+
+    //logic if password is not correct
+
+    if (!isPasswordCorrect)
+      return res
+        .status(400)
+        .json({ message: "Invalid credentials.", error: true });
+
+    //If user exists, and password is correct, get a JWT to send to front end
+
+    const token = jwt.sign(
+      { email: existingUser.email, id: existingUser._id },
+      process.env.JWTSECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.status(200).json({ result: existingUser, token });
+  } catch (error) {
+    res.status(500).json({ message: "Error" });
+  }
+};
