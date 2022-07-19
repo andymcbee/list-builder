@@ -4,10 +4,14 @@ import mongoose from "mongoose";
 //-----create Message-----
 
 export const createMessage = async (req, res) => {
+  console.log("MESSAGES API WAS HIT. CREATE MESSAGE.");
+
   const { headline, message } = req.body;
 
-  const { teamId } = req.params;
+  const { accountId } = req.params;
 
+  console.log(req.body);
+  console.log(req.params);
   if (!headline) {
     return res
       .status(409)
@@ -23,7 +27,7 @@ export const createMessage = async (req, res) => {
   const newMessage = await Message.create({
     headline,
     message,
-    teamId,
+    accountId,
   });
 
   return res

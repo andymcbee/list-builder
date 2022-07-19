@@ -5,24 +5,20 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import SmsIcon from "@mui/icons-material/Sms";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { signin, reset } from "../../features/auth/authSlice";
+import { reset } from "../../features/auth/authSlice";
 import Spinner from "../../components/spinner/Spinner";
 
 const theme = createTheme();
 
 export default function UserSignin() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
 
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { user, isLoading, isError, isSuccess, message } = useSelector(
@@ -34,18 +30,19 @@ export default function UserSignin() {
       toast.error(message);
     }
 
-    if (isSuccess || user) {
-      navigate("/");
+    if (isSuccess) {
+      //   toast.error(message);
+      //show a success message here
     }
 
     dispatch(reset());
-  }, [user, message, isError, isSuccess, navigate, dispatch]);
+  }, [user, message, isError, isSuccess, dispatch]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    let formData = { email, password };
-    dispatch(signin(formData));
+    //let formData = { email, password };
+    // dispatch(signin(formData));
   };
 
   if (isLoading) {
@@ -65,10 +62,10 @@ export default function UserSignin() {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
+            <SmsIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Send Request
           </Typography>
           <Box component="form" validate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
@@ -76,40 +73,24 @@ export default function UserSignin() {
                 <TextField
                   required
                   fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                  onChange={(e) => setPassword(e.target.value)}
+                  id="phone"
+                  label="Phone Number"
+                  name="phone"
+                  type="phone"
+                  autoComplete="phone"
+                  onChange={(e) => setPhone(e.target.value)}
                 />
               </Grid>
             </Grid>
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Login
+              Send Request
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link to="/reset-password">Forgot password?</Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
       </Container>

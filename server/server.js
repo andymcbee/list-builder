@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 
-import commSendsRoute from "./routes/commSendsRoutes.js";
+import smsRequestRoute from "./routes/smsRequestRoutes.js";
 import usersRoute from "./routes/userRoutes.js";
 import messagesRoute from "./routes/messageRoutes.js";
 
@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
 const port = process.env.PORT || 5000;
 
-app.use("/api/comm-sends", commSendsRoute);
+app.use("/api/sms-requests", smsRequestRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/messages", messagesRoute);
 

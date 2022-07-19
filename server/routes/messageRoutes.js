@@ -9,7 +9,7 @@ import auth from "../middleware/auth.js";
 const router = express.Router();
 
 //create new message
-router.post("/create/:teamId", auth, createMessage);
+router.post("/create/:accountId", auth, createMessage);
 
 //update new message
 router.put("/update/:id", auth, updateMessage);

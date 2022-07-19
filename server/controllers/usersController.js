@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { uid } from "uid";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import axios from "axios";
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ export const createUser = async (req, res) => {
   res.status(200).json({ message: "Create a user" });
 };
 
-//-----Create user-----
+//-----Create Account Owner and Provision New Account-----
 export const createAccountOwnerUser = async (req, res) => {
   const { email, password, confirmPassword } = req.body;
 
@@ -66,12 +67,42 @@ export const createAccountOwnerUser = async (req, res) => {
     password: hashedPassword,
     accountId: accountUniqueId,
   });
+
   //Create JWToken for user so we can sign them in after sign up
   const token = jwt.sign(
     { email: newUser.email, id: newUser._id },
     process.env.JWTSECRET,
     { expiresIn: "1h" }
   );
+
+  //create a default Message for the account
+
+  const createNewMessage = async () => {
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+
+    const bodyParameters = {
+      headline: "Enter your phone number for a chance to win a $100 gift card!",
+      message:
+        "Hi, thank you for visiting us. How was your experience? We'd love to hear from you!",
+    };
+
+    try {
+      const { data } = await axios.post(
+        `http://localhost:5000/api/messages/create/${newUser.accountId}`,
+        bodyParameters,
+        config
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  createNewMessage();
+
+  //respond to client
+
   res.status(200).json({ result: newUser, token });
 };
 

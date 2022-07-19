@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,16 +11,14 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Link } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { register, reset } from "../../features/auth/authSlice";
+import Spinner from "../../components/spinner/Spinner";
 
-//Set the states that are pulled in:
-//email
-//password
-//confirm
-//error
-
-//Set the inputs?...
-
-//Set the function that6 happens onclick?...
+//I replaced MUI's error message with Toastify.
+// Look through code and remove old references as needed.
 
 const theme = createTheme();
 
@@ -30,20 +28,44 @@ export default function UserSignup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(false);
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+
+    if (isSuccess || user) {
+      navigate("/");
+    }
+
+    dispatch(reset());
+  }, [user, message, isError, isSuccess, navigate, dispatch]);
+
   const handleSubmit = async (event) => {
     if (password !== confirmPassword) {
-      setError(true);
+      toast.error("Passwords do not match");
     }
     event.preventDefault();
 
     let formData = { email, password, confirmPassword };
 
     if (password === confirmPassword) {
+      dispatch(register(formData));
       //const signupData = await signup(formData, navigate);
 
       setError(false);
     }
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <ThemeProvider theme={theme}>
