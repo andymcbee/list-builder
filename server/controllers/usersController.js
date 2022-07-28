@@ -8,15 +8,43 @@ import axios from "axios";
 
 dotenv.config();
 
-//-----Get single user-----
-export const getUser = (req, res) => {
-  res.status(200).json({ message: `Get single user id: ${req.params.id}` });
+//-----Get single user with a valid JWT-----
+
+export const getUserByJwt = async (req, res) => {
+  try {
+    console.log("API CALL HIT");
+
+    const token = req.headers.authorization.split(" ")[1];
+
+    // console.log(req.headers.authorization);
+
+    let decodedData = jwt.verify(token, process.env.JWTSECRET);
+
+    //console.log(decodedData);
+
+    const existingUser = await User.findOne({ _id: decodedData.id });
+    console.log("EXISTING USER::::::::");
+    console.log(existingUser);
+
+    if (!existingUser) {
+      return res
+        .status(409)
+        .json({ message: "User does not exist", error: true });
+    }
+
+    res.status(200).json({ result: existingUser });
+  } catch (error) {
+    //this should return error to client
+    return res.status(401).json({
+      message: "Error",
+      error: true,
+    });
+  }
 };
 
 //-----Create user-----
 export const createUser = async (req, res) => {
   const { email, password, confirmPassword } = req.body;
-  console.log(req.params.accountId);
   //Same as account user - except do not generate a account Id. Instead, use the param account Id provided.
   //do a lookup for that account in the event a non existing id is passed back somehow.
   res.status(200).json({ message: "Create a user" });
@@ -25,8 +53,6 @@ export const createUser = async (req, res) => {
 //-----Create Account Owner and Provision New Account-----
 export const createAccountOwnerUser = async (req, res) => {
   const { email, password, confirmPassword } = req.body;
-
-  console.log(req.body);
 
   const existingUser = await User.findOne({ email });
 
@@ -108,15 +134,12 @@ export const createAccountOwnerUser = async (req, res) => {
 
 export const signin = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email);
-  console.log(password);
 
   console.log("WORKED");
 
   try {
     //attempt to find a user in the DB that matches the req.body.email
     const existingUser = await User.findOne({ email });
-    console.log(existingUser);
 
     //If user not found, return an error message
     if (!existingUser)

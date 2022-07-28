@@ -1,11 +1,12 @@
 import React from "react";
-
-import UserSignin from "../../components/smsRequestUi/smsRequestUi";
+import Header from "../../components/header/Header";
+import SmsAdminUi from "../../components/smsAdminUi/smsAdminUi";
 
 export const HomePage = () => {
   return (
-    <div>
-      <UserSignin />
-    </div>
+    <>
+      <Header />
+      <SmsAdminUi />
+    </>
   );
 };

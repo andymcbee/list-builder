@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
+import cors from "cors";
 
 import smsRequestRoute from "./routes/smsRequestRoutes.js";
 import usersRoute from "./routes/userRoutes.js";
@@ -9,6 +10,7 @@ import messagesRoute from "./routes/messageRoutes.js";
 
 const app = express();
 dotenv.config();
+app.use(cors());
 
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));

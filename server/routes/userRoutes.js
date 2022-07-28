@@ -1,15 +1,16 @@
 import express from "express";
 import {
-  getUser,
+  getUserByJwt,
   createUser,
   createAccountOwnerUser,
   signin,
 } from "../controllers/usersController.js";
+import auth from "../middleware/auth.js";
 
 const router = express.Router();
 
 //get one
-router.get("/:id", getUser);
+router.post("/", auth, getUserByJwt);
 
 //create user
 router.post("/create/:teamId", createUser);

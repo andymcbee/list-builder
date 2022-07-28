@@ -4,7 +4,11 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const auth = async (req, res, next) => {
-  console.log(req.headers);
+  // console.log(req.body.headers.Authorization);
+  //body was added when hitting endpoint outside of redux or postman. Look into why.
+
+  console.log(req.headers.authorization);
+
   try {
     const token = req.headers.authorization.split(" ")[1];
 
@@ -15,6 +19,7 @@ const auth = async (req, res, next) => {
       decodedData = jwt.verify(token, process.env.JWTSECRET);
 
       req.userId = decodedData?.id;
+      console.log(decodedData);
     }
 
     next();

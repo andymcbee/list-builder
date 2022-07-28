@@ -1,0 +1,35 @@
+.numPadFlexContainer {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+}
+
+.numPadRow {
+  display: flex;
+  justify-content: space-evenly;
+  border: 1px solid green;
+  max-width: 500px;
+}
+
+.number {
+  display: flex;
+  justify-content: center;
+  background-color: aliceblue;
+  border: 1px solid blue;
+  margin: 10px;
+  font-size: 28px;
+  text-align: center;
+  min-width: 25%;
+}
+
+.button {
+  background-color: aliceblue;
+  border: 1px solid blue;
+  min-width: 40%;
+  padding: 25px;
+  margin: 10px;
+}
+
+.press:hover {
+  cursor: pointer;
+}

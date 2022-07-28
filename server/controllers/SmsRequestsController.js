@@ -28,6 +28,3 @@ export const updateSmsRequest = (req, res) => {
 export const deleteSmsRequest = (req, res) => {
   res.status(200).json({ message: `Delete comm sends id: ${req.params.id}` });
 };
-
-//-----Send SMS via Twilio-----
-//Add logic later.
