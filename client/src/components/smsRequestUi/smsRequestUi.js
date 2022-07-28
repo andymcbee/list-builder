@@ -8,7 +8,7 @@ import "./smsRequestUi.css";
 
 export default function SmsRequestUi() {
   const [phoneDisplay, setPhoneDisplay] = useState("(___) ___-____");
-  const [phone, setPhone] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const [accessAllowed, setAccessAllowed] = useState(false);
 
@@ -35,57 +35,30 @@ export default function SmsRequestUi() {
     checkAccessAllowed();
   }, [pageId]);
 
-  //On page load, check and see if a pageId exists in MongoDB.
-  // --> This will be done in Redux.
-  //--> Keep in mind... the endpoint needs to be NOT protected... users on this
-  // Be sure this check happens EVERY time a request is sent. This means
-  //If the admin changes the URL, then new requests can't be sent out.
-  //page won't be auth'd
-
-  //If so, load page.
-  //If not, show error page. (Blank page for now.)
-
   const handleNumClick = (num) => {
-    //Return if no more input is allowed.
-    if (phone.length >= 10) {
-      toast.error("Max length reached");
-
+    if (phoneNumber.length >= 10) {
+      toast.error("Max phone number length reached");
       return;
     }
 
-    let updatedNumber = phone.toString() + num.toString();
-    let currentDisplayNumber = phoneDisplay;
-
-    console.log(updatedNumber.length);
-
     const updateDisplayState = (num) => {
+      let currentDisplayNumber = phoneDisplay;
       let updatedDisplayString = currentDisplayNumber.replace(/_/, num);
 
       setPhoneDisplay(updatedDisplayString);
     };
 
-    const updatePhoneState = (updatedNumber) => {
-      setPhone(updatedNumber);
-    };
-
-    updatePhoneState(updatedNumber);
     updateDisplayState(num);
+    setPhoneNumber(phoneNumber.toString() + num.toString());
   };
 
-  const deleteNum = (phone) => {
-    // If phone is empty, return.
-    if (!phone) return;
+  const deleteLastNumberInput = (phoneNumber) => {
+    if (!phoneNumber) return;
 
-    let currentPhoneString = phone;
+    const updatePhoneDisplayState = (phoneNumber) => {
+      let lastCharOfPhoneNumber = phoneNumber.charAt(phoneNumber.length - 1);
 
-    // handle Phone Display string update. Find and replace
-    // last num char with an underscore
-
-    const updatePhoneDisplayState = (currentPhoneString) => {
-      //find last Char in the num-only phone string (NOT display string)
-      let lastChar = currentPhoneString.charAt(currentPhoneString.length - 1);
-
-      const lastIndex = phoneDisplay.lastIndexOf(lastChar);
+      const lastIndex = phoneDisplay.lastIndexOf(lastCharOfPhoneNumber);
       const replacement = "_";
 
       const updatedPhoneDisplay =
@@ -96,15 +69,9 @@ export default function SmsRequestUi() {
       setPhoneDisplay(updatedPhoneDisplay);
     };
 
-    //handle phone string update
+    setPhoneNumber(phoneNumber.slice(0, -1));
 
-    const updatePhoneState = (phone) => {
-      setPhone(phone.slice(0, -1));
-    };
-
-    //call both update functions
-    updatePhoneDisplayState(currentPhoneString);
-    updatePhoneState(phone);
+    updatePhoneDisplayState(phoneNumber);
   };
 
   if (accessAllowed) {
@@ -152,7 +119,10 @@ export default function SmsRequestUi() {
           </div>
         </div>
         <div className="numPadRow">
-          <div className="button press" onClick={() => deleteNum(phone)}>
+          <div
+            className="button press"
+            onClick={() => deleteLastNumberInput(phoneNumber)}
+          >
             Back
           </div>
           <div className="button press">Submit</div>
