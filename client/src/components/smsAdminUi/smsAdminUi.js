@@ -44,7 +44,7 @@ export default function SmsRequestUi() {
 
       try {
         const { data } = await axios.post(
-          `http://localhost:5000/api/messages/replacePageId/${messageData._id}`,
+          `/api/messages/replacePageId/${messageData._id}`,
           null,
           config
         );
@@ -75,7 +75,7 @@ export default function SmsRequestUi() {
 
       try {
         const { data } = await axios.post(
-          `http://localhost:5000/api/messages/update/${messageData._id}`,
+          `/api/messages/update/${messageData._id}`,
           body,
           config
         );
@@ -94,7 +94,7 @@ export default function SmsRequestUi() {
 
       try {
         const { data } = await axios.get(
-          `http://localhost:5000/api/messages/${user.accountId}`,
+          `/api/messages/${user.accountId}`,
           config
         );
 

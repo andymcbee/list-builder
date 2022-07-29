@@ -36,7 +36,7 @@ const fetchUser = async (jwtToken) => {
     },
   };
 
-  console.log("PRE-RESPONSE");
+  console.log("PRE-RESPONSE in auth service");
 
   try {
     const response = await axios.post(API_URL, null, config);
