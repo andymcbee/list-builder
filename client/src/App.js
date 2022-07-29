@@ -26,6 +26,8 @@ function App() {
       }
     };
 
+    fetchUser();
+
     if (isError) {
       toast.error(message);
     }
