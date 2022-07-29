@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import cors from "cors";
+import path from "path";
 
 import smsRequestRoute from "./routes/smsRequestRoutes.js";
 import usersRoute from "./routes/userRoutes.js";
@@ -20,6 +21,20 @@ const port = process.env.PORT || 5000;
 app.use("/api/sms-requests", smsRequestRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/messages", messagesRoute);
+
+//serve frontend
+if (process.env.NODE_ENV === "production") {
+  //specifcy the build directory
+  app.use(express.static(path.join(__dirname, "../client/build")));
+  //specify route
+  app.get("*", (req, res) =>
+    res.sendFile(
+      path.resolve(__dirname, "../", "client", "build", "index.html")
+    )
+  );
+} else {
+  app.get("/", (req, res) => res.send("Set to production."));
+}
 
 mongoose
   .connect(process.env.MONGO_URL, {
