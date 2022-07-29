@@ -2,6 +2,9 @@
   "name": "list-builder",
   "version": "1.0.0",
   "description": "List builder app",
+  "engines": {
+    "node": "16.14.0"
+  },
   "main": "server.js",
   "type": "module",
   "scripts": {
