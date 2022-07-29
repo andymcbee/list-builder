@@ -29,7 +29,7 @@ app.use("/api/messages", messagesRoute);
 //serve frontend
 if (process.env.NODE_ENV === "production") {
   //specifcy the build directory
-  app.use(express.static(path.join("server/", "../client/build")));
+  app.use(express.static("server/../client/build"));
   //specify route
   app.get("*", (req, res) =>
     res.sendFile(
