@@ -17,9 +17,7 @@ export default function SmsRequestUi() {
   useEffect(() => {
     const checkAccessAllowed = async () => {
       try {
-        const { data } = await axios.get(
-          `http://localhost:5000/api/messages/access/${pageId}`
-        );
+        const { data } = await axios.get(`/api/messages/access/${pageId}`);
 
         console.log(data.error);
 
