@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import cors from "cors";
 import path from "path";
-
 import smsRequestRoute from "./routes/smsRequestRoutes.js";
 import usersRoute from "./routes/userRoutes.js";
 import messagesRoute from "./routes/messageRoutes.js";
@@ -30,11 +29,11 @@ app.use("/api/messages", messagesRoute);
 //serve frontend
 if (process.env.NODE_ENV === "production") {
   //specifcy the build directory
-  app.use(express.static(path.join(__dirname, "../client/build")));
+  app.use(express.static(path.join("server/", "../client/build")));
   //specify route
   app.get("*", (req, res) =>
     res.sendFile(
-      path.resolve(__dirname, "../", "client", "build", "index.html")
+      path.resolve("server/", "../", "client", "build", "index.html")
     )
   );
 } else {
