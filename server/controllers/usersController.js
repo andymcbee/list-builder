@@ -116,7 +116,7 @@ export const createAccountOwnerUser = async (req, res) => {
 
     try {
       const { data } = await axios.post(
-        `http://localhost:5000/api/messages/create/${newUser.accountId}`,
+        `/api/messages/create/${newUser.accountId}`,
         bodyParameters,
         config
       );

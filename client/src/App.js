@@ -18,22 +18,18 @@ function App() {
     (state) => state.auth
   );
 
-  let jwtToken = JSON.parse(localStorage.getItem("user"));
-
-  if (!user && jwtToken) {
-    dispatch(fetchUser(jwtToken));
-  }
-
   useEffect(() => {
+    let jwtToken = JSON.parse(localStorage.getItem("user"));
+
+    if (!user && jwtToken) {
+      dispatch(fetchUser(jwtToken));
+    }
     if (isError) {
       toast.error(message);
     }
 
     dispatch(reset());
-
-    // dispatching the reset before the form data loads is causing a flicker. This will cause an issue
-    // dispatch(reset());
-  }, [user, message, isError, isSuccess, dispatch, isLoading, jwtToken]);
+  }, [user, message, isError, isSuccess, dispatch, isLoading]);
 
   if (!isLoading) {
     return (
