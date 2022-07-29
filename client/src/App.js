@@ -19,11 +19,13 @@ function App() {
   );
 
   useEffect(() => {
-    let jwtToken = JSON.parse(localStorage.getItem("user"));
+    const fetchUser = async () => {
+      let jwtToken = JSON.parse(localStorage.getItem("user"));
+      if (!user && jwtToken) {
+        await dispatch(fetchUser(jwtToken));
+      }
+    };
 
-    if (!user && jwtToken) {
-      dispatch(fetchUser(jwtToken));
-    }
     if (isError) {
       toast.error(message);
     }
