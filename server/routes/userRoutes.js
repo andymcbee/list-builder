@@ -4,6 +4,7 @@ import {
   createUser,
   createAccountOwnerUser,
   signin,
+  sendResetPasswordEmail,
 } from "../controllers/usersController.js";
 import auth from "../middleware/auth.js";
 
@@ -20,5 +21,8 @@ router.post("/create", createAccountOwnerUser);
 
 //sign user in
 router.post("/signin", signin);
+
+//Public. Send password reset email.
+router.post("/reset-password/send-email", sendResetPasswordEmail);
 
 export default router;

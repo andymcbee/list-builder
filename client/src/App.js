@@ -6,6 +6,9 @@ import { HomePage } from "./views/HomePage/HomePage";
 import Signin from "./views/Signin/Signin";
 import Signup from "./views/Signup/Signup";
 import { SmsInterfacePage } from "./views/SmsInterfacePage/SmsInterfacePage";
+import PasswordResetPage from "./views/ResetPasswordPage/ResetPasswordPage";
+import SetPasswordPage from "./views/SetPasswordPage/SetPasswordPage";
+
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUser, reset } from "./features/auth/authSlice";
 import { toast } from "react-toastify";
@@ -19,14 +22,17 @@ function App() {
   );
 
   useEffect(() => {
-    const fetchUser = async () => {
+    //Fetch user isn't working properly. Debug. App works fine, but doesn't
+    //re-auth even if a token is held in localstore.
+    // I think await is the issue - try getting rid of that.
+    /*  const fetchUser = async () => {
       let jwtToken = JSON.parse(localStorage.getItem("user"));
       if (!user && jwtToken) {
         await dispatch(fetchUser(jwtToken));
       }
     };
 
-    fetchUser();
+    fetchUser(); */
 
     if (isError) {
       toast.error(message);
@@ -51,6 +57,12 @@ function App() {
                 element={user ? <HomePage /> : <Signup />}
               />
               <Route path="/send/:pageId" element={<SmsInterfacePage />} />
+              <Route path="/reset-password" element={<PasswordResetPage />} />
+
+              <Route
+                path="/set-password/:userId/:resetToken"
+                element={<SetPasswordPage />}
+              />
             </Routes>
           </div>
         </Router>

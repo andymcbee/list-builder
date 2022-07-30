@@ -5,6 +5,7 @@ import { uid } from "uid";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import axios from "axios";
+import nodemailer from "nodemailer";
 
 dotenv.config();
 
@@ -173,4 +174,71 @@ export const signin = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Error" });
   }
+};
+
+//reset password
+
+export const sendResetPasswordEmail = async (req, res) => {
+  const { email } = req.body;
+
+  async function main(userId, token) {
+    const link = `http://localhost:3000/set-password/${userId}/${token}`;
+    console.log(link);
+
+    const html = `<html><body>Hey, here's that link I weas talking about: <a href="${link}">here</a></body></html>`;
+
+    console.log("userId::::");
+    console.log(userId);
+    console.log("token:::::");
+    console.log(token);
+
+    const user = process.env.OUTLOOKUSER;
+    const pass = process.env.OUTLOOKPASS;
+    console.log("user:::::");
+    console.log(user);
+    console.log("pass:::::");
+
+    console.log(pass);
+
+    const subject = "Password Reset";
+
+    const transporter = nodemailer.createTransport({
+      service: "hotmail",
+      auth: {
+        user,
+        pass,
+      },
+    });
+
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+      from: `Andrew McBurney" <${user}>`, // sender address
+      to: email, // list of receivers
+      subject, // Subject line
+      text: "Hello world?", // plain text body
+      html, // html body
+    });
+  }
+
+  try {
+    const existingUser = await User.findOne({
+      email,
+    });
+
+    if (existingUser) {
+      const userId = existingUser._id.toString();
+      const userSecret = process.env.JWTSECRETPASSRESET + userId;
+
+      const token = jwt.sign(
+        { email: existingUser.email, id: existingUser.password },
+        userSecret,
+        { expiresIn: "15m" }
+      );
+      main(userId, token).catch(console.error);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+
 };
